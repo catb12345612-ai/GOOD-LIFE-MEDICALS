@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Good Life Medicals - Store Feedback</title>
+    <style>
+        :root {
+            --medical-green: #00796b;
+            --light-green: #e0f2f1;
+            --bg-color: #f5f7fa;
+            --text-dark: #2d3748;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            user-select: none;
+        }
+
+        .header {
+            width: 100%;
+            background: var(--medical-green);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 { margin: 0; font-size: 2.2rem; text-transform: uppercase; letter-spacing: 1px; }
+        .header p { margin: 5px 0 0 0; font-size: 1.1rem; opacity: 0.9; }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            padding: 30px 20px;
+            flex-grow: 1;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--text-dark);
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* EMOJIS */
+        .emoji-grid {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .emoji-btn {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px 10px;
+            width: 30%;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .emoji-btn .icon { font-size: 4rem; display: block; margin-bottom: 10px; }
+        .emoji-btn .label { font-size: 1.1rem; font-weight: 600; color: #718096; }
+
+        .emoji-btn.selected {
+            border-color: var(--medical-green);
+            background: var(--light-green);
+            transform: scale(1.05);
+        }
+        .emoji-btn.selected .label { color: var(--medical-green); }
+
+        /* REASONS */
+        .reasons-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .reason-btn {
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #4a5568;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .reason-btn.selected {
+            background: var(--medical-green);
+            color: white;
+            border-color: var(--medical-green);
+        }
+
+        /* INPUTS */
+        .inputs input {
+            width: 100%;
+            padding: 18px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            outline: none;
+        }
+        .inputs input:focus { border-color: var(--medical-green); }
+
+        .submit-btn {
+            width: 100%;
+            background: var(--medical-green);
+            color: white;
+            padding: 20px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .thank-you {
+            display: none;
+            text-align: center;
+            padding: 50px 20px;
+        }
+        
+        .thank-you h2 { color: var(--medical-green); font-size: 2.5rem; margin-bottom: 10px; }
+
+        .dev-footer {
+            width: 100%;
+            background: #1a202c;
+            color: #a0aec0;
+            text-align: center;
+            padding: 15px;
+            font-size: 0.85rem;
+        }
+        .dev-footer span { color: #4fd1c5; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Good Life Medicals</h1>
+        <p>Customer Feedback Kiosk</p>
+    </div>
+
+    <div class="container">
+        <div class="card" id="formUI">
+            <div class="section-title">1. How was your experience today?</div>
+            <div class="emoji-grid">
+                <div class="emoji-btn" onclick="setRating(this, 'Awesome 🤩')">
+                    <span class="icon">🤩</span><span class="label">Awesome</span>
+                </div>
+                <div class="emoji-btn" onclick="setRating(this, 'Good 🙂')">
+                    <span class="icon">🙂</span><span class="label">Good</span>
+                </div>
+                <div class="emoji-btn" onclick="setRating(this, 'Bad 😞')">
+                    <span class="icon">😞</span><span class="label">Bad</span>
+                </div>
+            </div>
+
+            <div class="section-title">2. Tell us why?</div>
+            <div class="reasons-grid">
+                <div class="reason-btn" onclick="setReason(this)">Fast & Good Service</div>
+                <div class="reason-btn" onclick="setReason(this)">All Medicines Available</div>
+                <div class="reason-btn" onclick="setReason(this)">Delay in Billing</div>
+                <div class="reason-btn" onclick="setReason(this)">Medicine Unavailable</div>
+                <div class="reason-btn" onclick="setReason(this)">Pharmacist/Staff Behavior</div>
+                <div class="reason-btn" onclick="setReason(this)">Pricing / Discount Issue</div>
+            </div>
+
+            <div class="section-title">3. Your Number (Optional)</div>
+            <div class="inputs">
+                <input type="tel" id="mobile" placeholder="Enter Mobile Number" maxlength="10">
+            </div>
+
+            <button class="submit-btn" onclick="submitData()">Submit Feedback</button>
+        </div>
+
+        <div class="card thank-you" id="thanksUI">
+            <h2>Thank You! 🙏</h2>
+            <p style="font-size: 1.2rem; color: #4a5568;">Your feedback helps us serve Khammam better.</p>
+            <p style="margin-top:30px; font-size: 0.9rem; color: #a0aec0;">Screen will reset automatically...</p>
+        </div>
+    </div>
+
+    <div class="dev-footer">
+        System Developed & Powered By <span>SYED ZEESHAAN ALI</span> (@syedzeeshaanali07) | ✆ 7989698613
+    </div>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxQuy6dlQ7WijcZQDZrzwwblRcKieHPXwxhsNIaZnE_klgJgaRqMNVcNIXKpwt..."; 
+        
+        let rating = "";
+        let reason = "";
+
+        function setRating(el, val) {
+            document.querySelectorAll('.emoji-btn').forEach(btn => btn.classList.remove('selected'));
+            el.classList.add('selected');
+            rating = val;
+        }
+
+        function setReason(el) {
+            document.querySelectorAll('.reason-btn').forEach(btn => btn.classList.remove('selected'));
+            el.classList.add('selected');
+            reason = el.innerText;
+        }
+
+        function submitData() {
+            if (!rating) { alert("Please select a rating (Awesome, Good, or Bad)."); return; }
+            
+            let mobile = document.getElementById('mobile').value;
+
+            document.getElementById('formUI').style.display = 'none';
+            document.getElementById('thanksUI').style.display = 'block';
+
+            // Send to Google Sheets
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    source: "Tablet Kiosk",
+                    rating: rating,
+                    category: reason || "No specific reason",
+                    mobile: mobile,
+                    comment: ""
+                })
+            });
+
+            // Reset after 4 seconds
+            setTimeout(() => {
+                rating = ""; reason = "";
+                document.querySelectorAll('.emoji-btn, .reason-btn').forEach(b => b.classList.remove('selected'));
+                document.getElementById('mobile').value = "";
+                document.getElementById('thanksUI').style.display = 'none';
+                document.getElementById('formUI').style.display = 'block';
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
