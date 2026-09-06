@@ -4,19 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Good Life Medicals - Store Feedback Kiosk</title>
+    <!-- Import Modern Fonts including Telugu Support -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Telugu:wght@400;600&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --medical-green: #00796b;
+            --medical-green-dark: #004d40;
             --medical-gold: #c59b27;
-            --light-green: #e0f2f1;
-            --bg-color: #f5f7fa;
-            --text-dark: #2d3748;
+            --bg-gradient: linear-gradient(135deg, #e0f7fa 0%, #ffffff 100%);
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
             --border-color: #e2e8f0;
+            
+            /* Glow Colors */
+            --glow-awesome: #10b981;
+            --glow-good: #3b82f6;
+            --glow-bad: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e0f2f1 100%);
+            font-family: 'Poppins', 'Noto Sans Telugu', sans-serif;
+            background: var(--bg-gradient);
             margin: 0;
             padding: 0;
             display: flex;
@@ -24,196 +38,295 @@
             align-items: center;
             min-height: 100vh;
             user-select: none;
-            box-sizing: border-box;
+            overflow-x: hidden;
         }
 
+        /* HEADER (Glassmorphism & Glow) */
         .header {
             width: 100%;
-            background: var(--medical-green);
+            background: rgba(0, 121, 107, 0.95);
+            backdrop-filter: blur(10px);
             color: white;
             padding: 20px;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 121, 107, 0.3);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            position: relative;
+            z-index: 10;
         }
 
         .store-logo {
-            width: 70px;
-            height: 70px;
+            width: 75px;
+            height: 75px;
             border-radius: 50%;
             object-fit: cover;
             border: 3px solid var(--medical-gold);
             background: white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 0 20px rgba(197, 155, 39, 0.6); /* Gold Glow */
+            animation: float 4s ease-in-out infinite;
         }
 
-        .header h1 { margin: 0; font-size: 1.8rem; text-transform: uppercase; letter-spacing: 1px; }
-        .header p { margin: 0; font-size: 1rem; opacity: 0.9; }
+        .header h1 { 
+            margin: 0; 
+            font-size: 1.8rem; 
+            font-weight: 700;
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .header p { 
+            margin: 0; 
+            font-size: 1rem; 
+            font-weight: 500;
+            opacity: 0.9; 
+        }
 
+        /* MAIN CONTAINER */
         .container {
             width: 100%;
-            max-width: 650px;
-            padding: 20px;
+            max-width: 700px;
+            padding: 25px 20px;
             flex-grow: 1;
-            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .card {
-            background: white;
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 20px 40px rgba(0, 121, 107, 0.08);
-            border: 1px solid var(--border-color);
-            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+            transition: all 0.4s ease;
         }
 
         .section-title {
-            font-size: 1.15rem;
+            font-size: 1.2rem;
             color: var(--text-dark);
             font-weight: 700;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
             text-align: center;
+            position: relative;
         }
 
-        /* EMOJIS */
+        /* EMOJIS WITH REACTION ANIMATIONS */
         .emoji-grid {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 25px;
+            gap: 15px;
+            margin-bottom: 30px;
         }
 
         .emoji-btn {
             background: white;
             border: 2px solid var(--border-color);
-            border-radius: 16px;
-            padding: 15px 5px;
-            width: 31%;
+            border-radius: 20px;
+            padding: 15px 10px;
+            width: 32%;
             text-align: center;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
         }
 
-        .emoji-btn:active { transform: scale(0.95); }
-        .emoji-btn .icon { font-size: 3.2rem; display: block; margin-bottom: 5px; }
-        .emoji-btn .label { font-size: 1rem; font-weight: 600; color: #718096; }
-
-        .emoji-btn.selected {
-            border-color: var(--medical-green);
-            background: var(--light-green);
-            transform: scale(1.03);
-            box-shadow: 0 5px 15px rgba(0,121,107,0.15);
+        .emoji-btn .icon { 
+            font-size: 3.5rem; 
+            display: block; 
+            margin-bottom: 8px;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));
         }
-        .emoji-btn.selected .label { color: var(--medical-green); }
+        
+        .emoji-btn .label { 
+            font-size: 1.1rem; 
+            font-weight: 600; 
+            color: var(--text-gray); 
+            transition: color 0.3s;
+        }
 
-        /* REASONS */
+        /* Selected Glow States */
+        .emoji-btn[data-type="awesome"].selected {
+            border-color: var(--glow-awesome);
+            background: rgba(16, 185, 129, 0.1);
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.4), inset 0 0 15px rgba(16, 185, 129, 0.1);
+            transform: translateY(-5px) scale(1.02);
+        }
+        .emoji-btn[data-type="awesome"].selected .icon { transform: scale(1.3) rotate(-10deg); }
+        .emoji-btn[data-type="awesome"].selected .label { color: var(--glow-awesome); }
+
+        .emoji-btn[data-type="good"].selected {
+            border-color: var(--glow-good);
+            background: rgba(59, 130, 246, 0.1);
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.4), inset 0 0 15px rgba(59, 130, 246, 0.1);
+            transform: translateY(-5px) scale(1.02);
+        }
+        .emoji-btn[data-type="good"].selected .icon { transform: scale(1.2) translateY(-5px); }
+        .emoji-btn[data-type="good"].selected .label { color: var(--glow-good); }
+
+        .emoji-btn[data-type="bad"].selected {
+            border-color: var(--glow-bad);
+            background: rgba(239, 68, 68, 0.1);
+            box-shadow: 0 0 25px rgba(239, 68, 68, 0.4), inset 0 0 15px rgba(239, 68, 68, 0.1);
+            transform: translateY(-5px) scale(1.02);
+        }
+        .emoji-btn[data-type="bad"].selected .icon { transform: scale(1.2) rotate(10deg); filter: grayscale(50%); }
+        .emoji-btn[data-type="bad"].selected .label { color: var(--glow-bad); }
+
+        /* REASONS GRID (BILINGUAL) */
         .reasons-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 15px;
+            margin-bottom: 25px;
         }
 
         .reason-btn {
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #4a5568;
+            background: white;
+            padding: 14px 10px;
+            border: 2px solid var(--border-color);
+            border-radius: 14px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
-        .reason-btn:active { transform: scale(0.97); }
+        .reason-btn .en { font-size: 1rem; font-weight: 700; color: var(--text-dark); }
+        .reason-btn .te { font-size: 0.9rem; font-weight: 600; color: var(--text-gray); }
+
+        .reason-btn:active { transform: scale(0.95); }
 
         .reason-btn.selected {
             background: var(--medical-green);
-            color: white;
             border-color: var(--medical-green);
+            box-shadow: 0 10px 20px rgba(0, 121, 107, 0.3);
+            transform: translateY(-3px);
         }
+        
+        .reason-btn.selected .en, .reason-btn.selected .te { color: white; }
 
         /* INPUTS */
         .inputs input, .inputs textarea {
             width: 100%;
-            padding: 15px;
+            padding: 16px;
             border: 2px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 1rem;
+            border-radius: 14px;
+            font-size: 1.05rem;
             margin-bottom: 15px;
-            box-sizing: border-box;
+            background: rgba(255,255,255,0.9);
             outline: none;
             font-family: inherit;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
         }
-        .inputs input:focus, .inputs textarea:focus { border-color: var(--medical-green); }
-        .inputs textarea { resize: none; height: 80px; }
+        
+        .inputs input:focus, .inputs textarea:focus { 
+            border-color: var(--medical-green); 
+            box-shadow: 0 0 15px rgba(0, 121, 107, 0.2), inset 0 2px 5px rgba(0,0,0,0.02);
+            background: white;
+        }
+        
+        .inputs textarea { resize: none; height: 90px; }
 
+        /* SUBMIT BUTTON (Pulse & Glow) */
         .submit-btn {
             width: 100%;
-            background: var(--medical-green);
+            background: linear-gradient(45deg, var(--medical-green), var(--medical-green-dark));
             color: white;
-            padding: 16px;
-            font-size: 1.1rem;
-            font-weight: bold;
+            padding: 18px;
+            font-size: 1.2rem;
+            font-weight: 700;
             border: none;
-            border-radius: 10px;
+            border-radius: 14px;
             cursor: pointer;
             text-transform: uppercase;
-            box-shadow: 0 6px 20px rgba(0,121,107,0.3);
-            transition: transform 0.1s;
+            letter-spacing: 1.5px;
+            box-shadow: 0 8px 25px rgba(0,121,107,0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            animation: pulse-glow 2s infinite;
         }
-        .submit-btn:active { transform: scale(0.98); }
 
+        .submit-btn:active { transform: scale(0.96); box-shadow: 0 4px 15px rgba(0,121,107,0.4); }
+
+        /* THANK YOU UI */
         .thank-you {
             display: none;
             text-align: center;
-            padding: 40px 20px;
+            padding: 50px 20px;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
-        .thank-you h2 { color: var(--medical-green); font-size: 2.2rem; margin-bottom: 10px; }
+        .thank-you h2 { color: var(--medical-green); font-size: 2.8rem; margin-bottom: 10px; text-shadow: 0 4px 15px rgba(0,121,107,0.2); }
+        .thank-you .te-thanks { font-size: 1.4rem; color: var(--text-dark); font-weight: 600; margin-bottom: 10px; }
+        .thank-you p { font-size: 1.1rem; color: var(--text-gray); }
 
+        /* FOOTER */
         .dev-footer {
             width: 100%;
-            background: #111827;
-            color: #9ca3af;
-            padding: 12px 20px;
+            background: #0f172a;
+            color: #94a3b8;
+            padding: 15px 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-sizing: border-box;
-            font-size: 0.8rem;
-            border-top: 2px solid var(--medical-gold);
+            font-size: 0.85rem;
+            border-top: 3px solid var(--medical-gold);
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
         }
 
-        .dev-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
+        .dev-info { display: flex; align-items: center; gap: 12px; }
         .dev-logo {
-            width: 32px;
-            height: 32px;
+            width: 36px; height: 36px;
             border-radius: 50%;
             object-fit: cover;
-            border: 1.5px solid var(--medical-gold);
+            border: 2px solid var(--medical-gold);
+        }
+        .dev-text span { color: #38bdf8; font-weight: 700; letter-spacing: 0.5px; }
+        .dev-links { color: #f8fafc; text-decoration: none; font-weight: 600; transition: 0.3s; }
+        .dev-links:hover { color: #38bdf8; text-shadow: 0 0 8px rgba(56,189,248,0.5); }
+
+        /* KEYFRAMES */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(0, 121, 107, 0.5); }
+            70% { box-shadow: 0 0 0 15px rgba(0, 121, 107, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 121, 107, 0); }
         }
 
-        .dev-text span { color: #38bdf8; font-weight: bold; }
-        .dev-links { color: #f3f4f6; text-decoration: none; font-weight: 600; }
-        .dev-links:hover { color: #38bdf8; }
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Responsive Fixes */
+        @media (max-width: 480px) {
+            .reasons-grid { grid-template-columns: 1fr; }
+            .dev-footer { flex-direction: column; gap: 10px; text-align: center; }
+        }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <img src="store-logo.png.png" alt="Good Life Medicals Logo" class="store-logo">
+        <img src="store-logo.png.png" alt="Good Life Medicals Logo" class="store-logo" onerror="this.src='https://via.placeholder.com/75?text=GLM'">
         <div>
             <h1>Good Life Medicals</h1>
-            <p>Khammam • Customer Feedback Kiosk</p>
+            <p>Khammam • Customer Feedback</p>
         </div>
     </div>
 
@@ -221,31 +334,52 @@
         <div class="card" id="formUI">
             <div class="section-title">1. How was your experience today?</div>
             <div class="emoji-grid">
-                <div class="emoji-btn" onclick="setRating(this, 'Awesome 🤩')">
-                    <span class="icon">🤩</span><span class="label">Awesome</span>
+                <div class="emoji-btn" data-type="awesome" onclick="setRating(this, 'Awesome 🤩')">
+                    <span class="icon">🤩</span>
+                    <span class="label">Awesome</span>
                 </div>
-                <div class="emoji-btn" onclick="setRating(this, 'Good 🙂')">
-                    <span class="icon">🙂</span><span class="label">Good</span>
+                <div class="emoji-btn" data-type="good" onclick="setRating(this, 'Good 🙂')">
+                    <span class="icon">🙂</span>
+                    <span class="label">Good</span>
                 </div>
-                <div class="emoji-btn" onclick="setRating(this, 'Bad 😞')">
-                    <span class="icon">😞</span><span class="label">Bad</span>
+                <div class="emoji-btn" data-type="bad" onclick="setRating(this, 'Bad 😞')">
+                    <span class="icon">😞</span>
+                    <span class="label">Bad</span>
                 </div>
             </div>
 
-            <div class="section-title">2. Tell us why?</div>
+            <div class="section-title">2. Tell us why? / కారణం?</div>
             <div class="reasons-grid">
-                <div class="reason-btn" onclick="setReason(this)">Fast & Good Service</div>
-                <div class="reason-btn" onclick="setReason(this)">All Medicines Available</div>
-                <div class="reason-btn" onclick="setReason(this)">Delay in Billing</div>
-                <div class="reason-btn" onclick="setReason(this)">Medicine Unavailable</div>
-                <div class="reason-btn" onclick="setReason(this)">Pharmacist/Staff Behavior</div>
-                <div class="reason-btn" onclick="setReason(this)">Pricing / Discount Issue</div>
+                <div class="reason-btn" onclick="setReason(this, 'Fast & Good Service')">
+                    <span class="en">Fast & Good Service</span>
+                    <span class="te">వేగవంతమైన & మంచి సేవ</span>
+                </div>
+                <div class="reason-btn" onclick="setReason(this, 'All Medicines Available')">
+                    <span class="en">All Medicines Available</span>
+                    <span class="te">అన్ని మందులు అందుబాటులో ఉన్నాయి</span>
+                </div>
+                <div class="reason-btn" onclick="setReason(this, 'Delay in Billing')">
+                    <span class="en">Delay in Billing</span>
+                    <span class="te">బిల్లింగ్ లో ఆలస్యం</span>
+                </div>
+                <div class="reason-btn" onclick="setReason(this, 'Medicine Unavailable')">
+                    <span class="en">Medicine Unavailable</span>
+                    <span class="te">మందులు అందుబాటులో లేవు</span>
+                </div>
+                <div class="reason-btn" onclick="setReason(this, 'Pharmacist/Staff Behavior')">
+                    <span class="en">Pharmacist/Staff Behavior</span>
+                    <span class="te">సిబ్బంది ప్రవర్తన</span>
+                </div>
+                <div class="reason-btn" onclick="setReason(this, 'Pricing / Discount Issue')">
+                    <span class="en">Pricing / Discount Issue</span>
+                    <span class="te">ధర / డిస్కౌంట్ సమస్య</span>
+                </div>
             </div>
 
-            <div class="section-title">3. Your Feedback & Contact Details</div>
+            <div class="section-title">3. Contact Details (Optional)</div>
             <div class="inputs">
-                <input type="tel" id="mobile" placeholder="Mobile Number (Optional)" maxlength="10">
-                <textarea id="customComment" placeholder="Write your custom feedback or suggestion here... (Optional)"></textarea>
+                <input type="tel" id="mobile" placeholder="Mobile Number / ఫోన్ నంబర్" maxlength="10">
+                <textarea id="customComment" placeholder="Write your suggestion here... / మీ సలహాలు..."></textarea>
             </div>
 
             <button class="submit-btn" onclick="submitData()">Submit Feedback</button>
@@ -253,14 +387,15 @@
 
         <div class="card thank-you" id="thanksUI">
             <h2>Thank You! 🙏</h2>
-            <p style="font-size: 1.1rem; color: #4a5568;">Your feedback helps us serve Khammam better.</p>
-            <p style="margin-top:20px; font-size: 0.85rem; color: #a0aec0;">Screen will reset automatically...</p>
+            <div class="te-thanks">ధన్యవాదాలు!</div>
+            <p style="margin-bottom: 20px;">Your feedback helps us serve Khammam better.</p>
+            <p style="font-size: 0.9rem; color: #94a3b8; animation: pulse-glow 2s infinite;">Screen will reset automatically...</p>
         </div>
     </div>
 
     <div class="dev-footer">
         <div class="dev-info">
-            <img src="dev-logo.png.png" alt="Developer Logo" class="dev-logo">
+            <img src="dev-logo.png.png" alt="Developer Logo" class="dev-logo" onerror="this.src='https://via.placeholder.com/36?text=DEV'">
             <div class="dev-text">
                 Developed by <span>SYED ZEESHAAN ALI</span>
             </div>
@@ -277,25 +412,40 @@
         let reason = "";
 
         function setRating(el, val) {
+            // Remove selection from all
             document.querySelectorAll('.emoji-btn').forEach(btn => btn.classList.remove('selected'));
+            
+            // Add to clicked element (Triggering the CSS animation)
             el.classList.add('selected');
             rating = val;
+            
+            // Haptic feedback if supported by device
+            if (navigator.vibrate) navigator.vibrate(50);
         }
 
-        function setReason(el) {
+        function setReason(el, englishVal) {
             document.querySelectorAll('.reason-btn').forEach(btn => btn.classList.remove('selected'));
             el.classList.add('selected');
-            reason = el.innerText;
+            
+            // Set reason string purely as English for your database
+            reason = englishVal;
+            
+            if (navigator.vibrate) navigator.vibrate(30);
         }
 
         function submitData() {
-            if (!rating) { alert("Please select a rating (Awesome, Good, or Bad)."); return; }
+            if (!rating) { 
+                alert("Please select a rating (Awesome, Good, or Bad)."); 
+                return; 
+            }
             
             let mobile = document.getElementById('mobile').value;
             let customComment = document.getElementById('customComment').value;
 
+            // Switch to Thank You UI
             document.getElementById('formUI').style.display = 'none';
             document.getElementById('thanksUI').style.display = 'block';
+            if (navigator.vibrate) navigator.vibrate([100, 50, 100]); // Success vibration
 
             // Send to Google Sheets
             fetch(SCRIPT_URL, {
@@ -309,17 +459,18 @@
                     mobile: mobile || "Not provided",
                     comment: customComment || "None"
                 })
-            });
+            }).catch(error => console.error('Error:', error));
 
-            // Reset after 4 seconds
+            // Reset UI smoothly after 5 seconds
             setTimeout(() => {
                 rating = ""; reason = "";
                 document.querySelectorAll('.emoji-btn, .reason-btn').forEach(b => b.classList.remove('selected'));
                 document.getElementById('mobile').value = "";
                 document.getElementById('customComment').value = "";
+                
                 document.getElementById('thanksUI').style.display = 'none';
                 document.getElementById('formUI').style.display = 'block';
-            }, 4000);
+            }, 5000);
         }
     </script>
 </body>
